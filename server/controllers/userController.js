@@ -14,7 +14,7 @@ const signIn = async(req,res) => {
         }
         const passwordMatched = await bcrypt.compare(password,user.password)
         if(!passwordMatched){
-            return res.status(401).json({messag:'Invalid password'})
+            return res.status(401).json({message:'Invalid password'})
         }
         const accessToken = jwt.sign({_id:user._id},process.env.ACCESS_TOKEN_SECRET,{
             expiresIn:"15m"

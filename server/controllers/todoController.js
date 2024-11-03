@@ -1,7 +1,7 @@
 import Todo from '../models/todoSchema.js'
 import User from '../models/userSchema.js'
 
-const createTodo = async() => {
+const createTodo = async(req,res) => {
     try {
         const { description,userId } = req.body
         if(!description || !userId){
@@ -26,7 +26,7 @@ const createTodo = async() => {
     }
 }
 
-const deleteTodo = async() => {
+const deleteTodo = async(req,res) => {
     try{
         const { id } = req.params
         if(!id){
@@ -42,7 +42,7 @@ const deleteTodo = async() => {
     }
 }
 
-const updateTodo = async() => {
+const updateTodo = async(req,res) => {
     try{
         const { id }  = req.params
         if(!id){
@@ -58,9 +58,10 @@ const updateTodo = async() => {
     }
 }
 
-const getTodo = async() => {
+const getTodo = async(req,res) => {
     try{
-        const todo = await Todo.find({})
+        const { userId } = req.params
+        const todo = await Todo.find({userId})
     if(!todo){
         return res.status(400).json({message:'No todos found'})
     }

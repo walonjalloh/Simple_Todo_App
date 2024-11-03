@@ -6,6 +6,7 @@ import cors from 'cors'
 import corsOptions from './configs/corsOptions.js'
 import todoRouter from './route/todoRouter.js'
 import userRouter from './route/userRouter.js'
+import connectDB from './configs/mongoDB.js'
 
 const data = fs.readFileSync('./templates/index.html', 'utf8')
 
@@ -19,6 +20,8 @@ app.use(cors(corsOptions))
 
 
 config()
+
+connectDB()
 
 //default route
 app.get('/', (req,res)=> {

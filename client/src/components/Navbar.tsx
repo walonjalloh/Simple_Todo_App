@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 
 const Navbar = () => {
     const [isOpened, setIsOpened] = useState<boolean>(false)
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true)
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
 
     const handleMobileMenu = () => {
         setIsOpened(!isOpened)

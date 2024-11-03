@@ -4,7 +4,8 @@ import auth from '../middleware/authMiddleware.js'
 
 const todoRouter = express.Router()
 
-todoRouter.route('/').post(auth, createTodo).get(getTodo)
+todoRouter.route('/').post(auth, createTodo)
+todoRouter.route('/:userId').get(getTodo)
 todoRouter.route('/:id').patch(auth, updateTodo).delete(auth, deleteTodo)
 
 export default todoRouter
