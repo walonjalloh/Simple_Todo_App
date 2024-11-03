@@ -9,7 +9,8 @@ const todoSchema = new Schema({
     },
     userId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"User"
+        ref:"User",
+        required:true
     },
     completed:{
         type:Boolean,

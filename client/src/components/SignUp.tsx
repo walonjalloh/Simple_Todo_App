@@ -3,6 +3,10 @@ import { Link } from "react-router-dom"
 import { useContext } from "react"
 import AuthContext from "@/contexts/authContext"
 import {ToastContainer} from 'react-toastify'
+import { Button } from "./ui/button"
+import { Input } from "./ui/input"
+import { Label } from "./ui/label"
+
 
 function SignUp() {
     const [username, setUsername] = useState<string>("")
@@ -33,13 +37,13 @@ function SignUp() {
             <p>create your account</p>
         </div>
         <form onSubmit={login} className="flex flex-col">
-            <label htmlFor="fullname">fullname</label>
-            <input type="text" value={fullname} required onChange={(e)=>setFullname(e.target.value)} id="fullname" />
-            <label htmlFor="username">username</label>
-            <input type="text" value={username} onChange={(e)=>setUsername(e.target.value)} required id="username" />
-            <label htmlFor="password">password</label>
-            <input type="password" id='password' required value={password} onChange={(e)=>setPassword(e.target.value)} />
-            <button>sign up</button>
+            <Label htmlFor="fullname">fullname</Label>
+            <Input type="text" value={fullname} required onChange={(e)=>setFullname(e.target.value)} id="fullname" />
+            <Label htmlFor="username">username</Label>
+            <Input type="text" value={username} onChange={(e)=>setUsername(e.target.value)} required id="username" />
+            <Label htmlFor="password">password</Label>
+            <Input type="password" id='password' required value={password} onChange={(e)=>setPassword(e.target.value)} />
+            <Button type="submit">sign up</Button>
         </form>
         <div className="flex items-center justify-center">
             <Link to='/login'><p>or sign in to an existing account</p></Link>

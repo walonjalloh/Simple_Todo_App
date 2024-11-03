@@ -15,9 +15,10 @@ const auth = async(req,res,next) => {
     if(!decoded){
         return res.status(400).json({message:"This token is wrong"})
     }
-    const user = await User.findOne({_id:decode._id})
+    const user = await User.findOne({ _id: decoded._id })
+
     if(!user){
-        res.status(400).json({message:'User not found'})
+        return res.status(400).json({message:'User not found'})
     }
     
     req.token = token

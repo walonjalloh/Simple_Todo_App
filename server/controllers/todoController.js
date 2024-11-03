@@ -7,12 +7,13 @@ const createTodo = async(req,res) => {
         if(!description || !userId){
             return res.status(400).json({message:'All fields are required'})
         }
-        const user = await User.findById({userId})
+        const user = await User.findById( userId )
         if(!user){
             return res.status(400).json({message:'Invalid User'})
         }
         const newTodo = new Todo({
-            description
+            description,
+            userId
         })
 
         await newTodo.save()
