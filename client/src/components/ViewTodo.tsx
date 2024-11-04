@@ -1,15 +1,21 @@
 import { useContext } from "react";
 import TodoContext from "@/contexts/todoContext";
 import { Checkbox } from "./ui/checkbox";
+import { useState } from "react";
 import { Trash2 } from 'lucide-react'; // Importing the delete icon
 // Testing
 import { fakeTodos } from "@/lib/test";
 
 function ViewTodo() {
+  const [strike, setStrike] = useState<boolean>(false)
   const { todo: todos } = useContext(TodoContext) || {};
 
   if (!Array.isArray(todos)) {
     return <p className="text-gray-500 text-center">No todos available.</p>;
+  }
+
+  const handlestrike = ():void => {
+    setStrike(!strike)
   }
 
   const todosfake = fakeTodos;
@@ -20,9 +26,9 @@ function ViewTodo() {
       <div className="space-y-4">
         {todosfake.map(todo => (
           <div key={todo.userId} className="flex flex-row justify-between items-center p-3 border-b border-gray-200">
-            <p className="text-black text-lg flex-1">{todo.description}</p>
+            <p className="text-black text-lg flex-1 line-through">{todo.description}</p>
             <div className="flex items-center space-x-2">
-              <Checkbox />
+              <Checkbox  onClick={handlestrike}/>
               <button className="text-red-500 hover:text-red-700 transition duration-200" onClick={() => {/* Add delete function here */}}>
                 <Trash2 className="h-5 w-5" />
               </button>

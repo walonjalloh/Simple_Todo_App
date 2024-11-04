@@ -5,7 +5,7 @@ function Footer() {
   
   return (
     <footer className="bg-gradient-to-r from-white via-sky-100 to-blue-200 text-black py-2">
-      <div className="max-w-7xl mx-auto flex flex-row justify-between items-center px-4">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center px-4">
         <div>
         <p className="font-bold text-lg">Walon &copy; {year}</p>
         </div>
