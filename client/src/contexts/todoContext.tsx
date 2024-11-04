@@ -1,72 +1,74 @@
-import { createContext,useState,useContext, useEffect } from "react";
+import { createContext, useState, useContext, useEffect } from "react";
 import { axiosInstanceTodo } from "@/api/axiosInstance";
 import AuthContext from "./authContext";
 import { toast } from "react-toastify";
 
 type TodoType = { 
-    createTodo:(description:string) => Promise<void>
-    todo:Todo[]
-}
+    createTodo: (description: string) => Promise<void>;
+    todo: Todo[];
+};
 
 type Todo = {
-    description:string,
-    completed:boolean,
-    _id:string,
-    userId:string
-}
+    description: string;
+    completed: boolean;
+    _id: string;
+    userId: string;
+};
 
-const TodoContext = createContext<TodoType | undefined>(undefined)
+const TodoContext = createContext<TodoType | undefined>(undefined);
 
+export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
+    const [todos, setTodos] = useState<Todo[]>([]);
+    const auth = useContext(AuthContext);
+    const userId = auth?.userId;
+    const token = auth?.token;
 
-export const TodoProvider = ({children}:{children:React.ReactNode}) => {
-    const [todo, setTodo] = useState<Todo[]>([])
-
-    //to get the user token and userId
-    const auth = useContext(AuthContext)
-    const userId = auth?.userId
-    const token = auth?.token
-
-    const createTodo = async(description:string):Promise<void> => {
-        try{
+    const createTodo = async (description: string): Promise<void> => {
+        try {
             const newTodo = {
                 userId,
-                description
-            }
-            await axiosInstanceTodo.post('/', newTodo ,{
+                description,
+            };
+            const response = await axiosInstanceTodo.post('/', newTodo, {
                 headers: {
-                    'Authorization':`Bearer${token}`
-                }
-            })
-            toast('todo created successfully')
-        }catch(error){
-            console.log(error)
-            toast('todo creation failed')
+                    'Authorization': `Bearer ${token}`, 
+                },
+            });
+            setTodos(prevTodos => [...prevTodos, response.data]); 
+            toast('Todo created successfully');
+        } catch (error) {
+            console.error(error);
+            toast('Todo creation failed');
         }
-    }
+    };
+
+    const getTodos = async (): Promise<void> => {
+        if (!userId || !token) return; 
+        try {
+            const response = await axiosInstanceTodo.get(`/${userId}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+            setTodos(response.data); 
+        } catch (error) {
+            console.error(`Error occurred: ${error}`);
+        }
+    };
 
     useEffect(() => {
-        const getTodo = async():Promise<void> => {
-            try {
-                const response = await axiosInstanceTodo.get(`/${userId}`)
-                console.log(response.data)
-                setTodo(prevTodo => [...prevTodo, response.data])
-            }catch(error){
-                console.log(`error occurred ${error}`)
-            }
-        }
-        getTodo()
-    },[userId])
+        getTodos(); 
+    }, [])
 
-    console.log(todo)
-   
-    return(
-        <TodoContext.Provider value={{
-            createTodo,
-            todo
+
+    return (
+        <TodoContext.Provider value={{ 
+            createTodo, 
+            todo: todos 
         }}>
             {children}
         </TodoContext.Provider>
-    )
-}
+    );
+};
 
-export default TodoContext
+export default TodoContext;
