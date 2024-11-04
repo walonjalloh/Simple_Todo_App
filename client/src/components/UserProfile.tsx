@@ -1,7 +1,7 @@
 import { userProfile } from "@/lib/test";
-import { User, IdCard, CheckSquare } from 'lucide-react'; // Importing icons
-import { Button } from "./ui/button"; // Assuming you have a button component
-import { Card } from "./ui/card"; // Example UI card component for consistent styling
+import { User, IdCard, CheckSquare } from 'lucide-react'; 
+import { Button } from "./ui/button"; 
+import { Card } from "./ui/card"; 
 
 function UserProfile() {
   if (!Array.isArray(userProfile)) {
