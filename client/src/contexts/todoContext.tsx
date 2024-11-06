@@ -2,11 +2,13 @@ import { createContext, useState, useContext, useEffect } from "react";
 import { axiosInstanceTodo } from "@/api/axiosInstance";
 import AuthContext from "./authContext";
 import { toast } from "react-toastify";
-import { useNavigate,useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 type TodoType = { 
     createTodo: (description: string) => Promise<void>;
     todo: Todo[];
+    updateTodo: (id: string) => Promise<void>;
+    deleteTodo: (id: string) => Promise<void>;
 };
 
 type Todo = {
@@ -23,8 +25,8 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
     const auth = useContext(AuthContext);
     const userId = auth?.userId;
     const token = auth?.token;
-    const navigate = useNavigate()
-    const location = useLocation()
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const createTodo = async (description: string): Promise<void> => {
         try {
@@ -39,8 +41,7 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
             });
             setTodos(prevTodos => [...prevTodos, response.data]);
             toast('Todo created successfully');
-            navigate('/view_todo', {state:{refresh:true}})
-            
+            navigate('/view_todo', { state: { refresh: true } });
         } catch (error) {
             console.error(error);
             toast('Todo creation failed');
@@ -48,34 +49,70 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     const getTodos = async (): Promise<void> => {
-        if (!userId || !token) return; 
+        if (!userId || !token) return;
         try {
             const response = await axiosInstanceTodo.get(`/${userId}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                 },
             });
-            setTodos(response.data); 
+            setTodos(response.data);  // Update todos in state
         } catch (error) {
             console.error(`Error occurred: ${error}`);
         }
     };
 
     useEffect(() => {
-        getTodos(); 
-    }, [userId])
+        getTodos();
+    }, [userId]);
 
     useEffect(() => {
-        if (location.state?.shouldRefetch) {
-            getTodos();
+        if (location.state?.refresh) {
+            getTodos();  // Refresh todos when navigation triggers refresh
         }
     }, [location.state]);
 
+    const updateTodo = async (id: string): Promise<void> => {
+        try {
+            const response = await axiosInstanceTodo.patch(`/${id}`, {}, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            setTodos(prevTodos =>
+                prevTodos.map(todo =>
+                    todo._id === id ? { ...todo, completed: response.data.completed } : todo
+                )
+            );  // Update the todo status in the UI
+        } catch (error) {
+            console.error(error);
+            toast('Error updating todo');
+        }
+    };
+
+    const deleteTodo = async (id: string): Promise<void> => {
+        try {
+            await axiosInstanceTodo.delete(`/${id}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            setTodos(prevTodos => prevTodos.filter(todo => todo._id !== id));  // Remove the deleted todo from state
+            toast('Todo deleted successfully');
+        } catch (error) {
+            console.error(error);
+            toast('Error deleting todo');
+        }
+    };
 
     return (
         <TodoContext.Provider value={{ 
             createTodo, 
-            todo: todos 
+            todo: todos,
+            updateTodo,
+            deleteTodo,
         }}>
             {children}
         </TodoContext.Provider>

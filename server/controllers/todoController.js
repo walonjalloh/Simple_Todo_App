@@ -27,37 +27,51 @@ const createTodo = async(req,res) => {
     }
 }
 
-const deleteTodo = async(req,res) => {
-    try{
-        const { id } = req.params
-        if(!id){
-            return res.status(400).json({message: 'Invalid todo id'})
+const updateTodo = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!id) {
+            return res.status(400).json({ message: "Invalid id number" });
         }
-        const deleteTodo = await Todo.findByIdAndDelete({id})
-        if(!deleteTodo){
-            return res.status(400).json({message:"Invalid todo "})
+        
+        const todo = await Todo.findById(id);
+        if (!todo) {
+            return res.status(404).json({ message: "Todo not found" });
         }
-        res.status(203).json({message:"todo deleted successfully "})
-    }catch(error){
-        res.status(400).json({error})
-    }
-}
 
-const updateTodo = async(req,res) => {
-    try{
-        const { id }  = req.params
-        if(!id){
-            return res.status(400).json({message:"Invalid id number"})
-        }
-        const updateTodo = await Todo.findByIdAndUpdate(id, {completed:true})
-        if(!updateTodo){
-            return res.status(400).json({mesagge:"Todo with that id not found"})
-        }
-        res.status(200).json({message:"Todo update successful"})
-    }catch(error){
-        res.status(400).json({error})
+        todo.completed = !todo.completed;
+
+        await todo.save();
+        
+        res.status(200).json(todo);  
+    } catch (error) {
+        res.status(400).json({ error });
     }
-}
+};
+
+const deleteTodo = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!id) {
+            return res.status(400).json({ message: "Invalid todo id" });
+        }
+        
+        const deleteTodo = await Todo.findByIdAndDelete(id);
+        if (!deleteTodo) {
+            return res.status(400).json({ message: "Invalid todo" });
+        }
+
+        const user = await User.findById(deleteTodo.userId);
+        if (user) {
+            user.todos = user.todos.filter(todoId => todoId.toString() !== id);
+            await user.save();
+        }
+
+        res.status(203).json({ message: "Todo deleted successfully" });
+    } catch (error) {
+        res.status(400).json({ error });
+    }
+};
 
 const getTodo = async(req,res) => {
     try{
