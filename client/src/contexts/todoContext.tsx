@@ -58,7 +58,7 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         getTodos(); 
-    }, [])
+    }, [userId])
 
 
     return (
