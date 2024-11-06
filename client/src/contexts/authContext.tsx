@@ -1,6 +1,7 @@
 import { createContext,useState } from "react";
 import { axiosInstanceUser } from "@/api/axiosInstance";
 import { toast } from "react-toastify";
+import { useLocation, useNavigate } from "react-router-dom";
 
 
 type AuthType = {
@@ -9,12 +10,14 @@ type AuthType = {
     token:string,
     user:User[],
     userId:string
+    isAuthenticated:boolean
 }
 
 type User = {
     fullname:string,
     _id:string,
-    username:string
+    username:string,
+    todos:[]
 }
 
 const AuthContext = createContext<AuthType | undefined>(undefined)
@@ -23,6 +26,12 @@ export const AuthProvider = ({children}:{children:React.ReactNode}) => {
     const [user, setUser] = useState<User[]>([])
     const [userId, SetUserId] = useState<string>('')
     const [token, setToken] = useState<string>('')
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
+
+    const navigate = useNavigate()
+    const location = useLocation()
+
+    const from = location?.state?.from?.pathname || "/"
 
     const handleLogin = async(username:string, password:string):Promise<void> => {
        try{
@@ -35,6 +44,8 @@ export const AuthProvider = ({children}:{children:React.ReactNode}) => {
         setUser(user.concat(response.data.user))
         SetUserId(userId.concat(response.data.user._id))
         setToken(token.concat(response.data.accessToken))
+        setIsAuthenticated(!isAuthenticated)
+        navigate(from, {replace:true})
         toast('login successful')
        }catch(error){
         console.log(`error occurred in logging ${error}`)
@@ -68,7 +79,8 @@ export const AuthProvider = ({children}:{children:React.ReactNode}) => {
         handleRegister,
         token,
         user,
-        userId
+        userId,
+        isAuthenticated
     }}>
         {children}
     </AuthContext.Provider>

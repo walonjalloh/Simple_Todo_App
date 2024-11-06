@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState,useContext } from "react";
 import { Menu } from 'lucide-react';
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
+import AuthContext from "@/contexts/authContext";
 
 const Navbar = () => {
     const [isOpened, setIsOpened] = useState<boolean>(false);
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+    const { isAuthenticated }  = useContext(AuthContext) || {}
 
     const handleMobileMenu = () => {
         setIsOpened(!isOpened);

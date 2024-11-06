@@ -3,8 +3,7 @@ import TodoContext from "@/contexts/todoContext";
 import { Checkbox } from "./ui/checkbox";
 import { useState } from "react";
 import { Trash2 } from 'lucide-react';
-// Testing
-// import { fakeTodos } from "@/lib/test";
+
 
 function ViewTodo() {
   const [strike, setStrike] = useState<boolean>(false)
@@ -18,7 +17,7 @@ function ViewTodo() {
     setStrike(!strike)
   }
 
-  // const todosfake = fakeTodos;
+ 
 
   return (
     <section className="bg-white shadow-lg rounded-lg p-6 max-w-md min-h-screen mt-10 mb-5 mx-auto">

@@ -2,6 +2,7 @@ import { createContext, useState, useContext, useEffect } from "react";
 import { axiosInstanceTodo } from "@/api/axiosInstance";
 import AuthContext from "./authContext";
 import { toast } from "react-toastify";
+import { useNavigate,useLocation } from "react-router-dom";
 
 type TodoType = { 
     createTodo: (description: string) => Promise<void>;
@@ -22,6 +23,8 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
     const auth = useContext(AuthContext);
     const userId = auth?.userId;
     const token = auth?.token;
+    const navigate = useNavigate()
+    const location = useLocation()
 
     const createTodo = async (description: string): Promise<void> => {
         try {
@@ -34,8 +37,10 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
                     'Authorization': `Bearer ${token}`, 
                 },
             });
-            setTodos(prevTodos => [...prevTodos, response.data]); 
+            setTodos(prevTodos => [...prevTodos, response.data]);
             toast('Todo created successfully');
+            navigate('/view_todo', {state:{refresh:true}})
+            
         } catch (error) {
             console.error(error);
             toast('Todo creation failed');
@@ -59,6 +64,12 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         getTodos(); 
     }, [userId])
+
+    useEffect(() => {
+        if (location.state?.shouldRefetch) {
+            getTodos();
+        }
+    }, [location.state]);
 
 
     return (

@@ -9,14 +9,14 @@ import { TodoProvider } from "./contexts/todoContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <AuthProvider>
-      <TodoProvider>
-      <Router>
-        <Routes>
-          <Route path="/*" element={<App />} />
-        </Routes>
-      </Router>
-      </TodoProvider>
-    </AuthProvider>
+    <Router>
+      <AuthProvider>
+        <TodoProvider>
+          <Routes>
+            <Route path='/*' element={<App/>}/>
+          </Routes>
+        </TodoProvider>
+      </AuthProvider>
+    </Router>
   </StrictMode>
 );
