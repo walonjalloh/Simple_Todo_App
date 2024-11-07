@@ -7,6 +7,7 @@ import corsOptions from './configs/corsOptions.js'
 import todoRouter from './route/todoRouter.js'
 import userRouter from './route/userRouter.js'
 import connectDB from './configs/mongoDB.js'
+import { refreshTokenRouter } from './route/refreshTokenRouter.js'
 
 const data = fs.readFileSync('./templates/index.html', 'utf8')
 
@@ -31,6 +32,7 @@ app.get('/', (req,res)=> {
 //defining the routes for my application
 app.use('/api/user',userRouter)
 app.use('/api/todo',todoRouter)
+app.use('/api/refresh',refreshTokenRouter)
 
 
 //application starting point

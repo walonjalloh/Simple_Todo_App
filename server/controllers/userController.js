@@ -26,7 +26,7 @@ const signIn = async(req,res) => {
         user.refreshToken = refreshToken
         user.save()
 
-        res.cookie('user',accessToken,{
+        res.cookie('user',refreshToken,{
             httpOnly:true,
             secure:true,
             maxAge:24 * 60 * 60 * 1000,
@@ -35,6 +35,7 @@ const signIn = async(req,res) => {
 
         const userResponse = user.toObject()
         delete userResponse.password
+        delete userResponse.refreshToken
 
         res.status(200).json({user:userResponse,accessToken})
 

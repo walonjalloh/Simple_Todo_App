@@ -1,9 +1,9 @@
 import mongoose from 'mongoose'
 
-const connectDB = () => {
+const connectDB = async() => {
     console.log(`MongoDB connection with retry`)
     try{
-        mongoose.connect(process.env.DATABASE_URI, {
+        await mongoose.connect(process.env.DATABASE_URI, {
 
         })
         console.log('Connected to MongoDB')
