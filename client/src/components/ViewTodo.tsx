@@ -26,10 +26,10 @@ function ViewTodo() {
               {todo.description}
             </p>
             <div className="flex items-center space-x-2">
-              <Checkbox checked={todo.completed} onClick={() => updateTodo(todo._id)} />
+              <Checkbox checked={todo.completed} onClick={() => updateTodo!(todo._id)} />
               <button
                 className="text-red-500 hover:text-red-700 transition duration-200"
-                onClick={() => deleteTodo(todo._id)}
+                onClick={() => deleteTodo!(todo._id)}
               >
                 <Trash2 className="h-5 w-5" />
               </button>

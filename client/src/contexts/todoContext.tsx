@@ -7,8 +7,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 type TodoType = { 
     createTodo: (description: string) => Promise<void>;
     todo: Todo[];
-    updateTodo: (id: string) => Promise<void>;
-    deleteTodo: (id: string) => Promise<void>;
+    updateTodo: (id: string) => Promise<void> | undefined;
+    deleteTodo: (id: string) => Promise<void> | undefined;
 };
 
 type Todo = {
