@@ -53,7 +53,6 @@ export const AuthProvider = ({children}:{children:React.ReactNode}) => {
        }
     }
 
-    // console.log(token,user,userId)
 
     const handleRegister = async(fullname:string, username:string, password:string,):Promise<void> =>{
         try {
@@ -64,7 +63,7 @@ export const AuthProvider = ({children}:{children:React.ReactNode}) => {
             }
             const response =  await axiosInstanceUser.post('/register', newUser)
             console.log(`successful ${response.data}`)
-            navigate(from, {replace:true})
+            navigate('/login')
             toast('register sucessful')
         }catch(error){
             console.log(`error occurred ${error}`)

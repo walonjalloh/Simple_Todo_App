@@ -69,7 +69,12 @@ const signUp = async(req,res) => {
     }
 }
 
+const signout = async(req,res) => {
+    
+}
+
 export {
     signIn,
-    signUp
+    signUp,
+    signout
 }
